@@ -7,7 +7,7 @@ const isToken = require('../Middlewares/auth.middleware');
 
 const productRouter = Router();
 
-productRouter.post('/add-product' , upload.single("file") , isAdmin , isToken,  addProduct);
+productRouter.post('/add-product' ,  isToken, isAdmin , addProduct);
 productRouter.get('/get-allproduct' , getAllProducts);
 productRouter.get('/get-productbyid' ,  isAdmin ,getProductById);
 productRouter.put('/update-product' , isAdmin , updateProduct);

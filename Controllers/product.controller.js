@@ -6,8 +6,8 @@ const upload = require('../Utils/imageUpload.util');
 
 const addProduct = async (req, res) => {
     try {
-        const { name, description,  price, category } = req.body;
-        const image = req.file? req.file.path : null;
+        const { name, description,  price, category , image } = req.body;
+        // const image = req.file? req.file.path : null;
         const addedBy = req.user._id
 
         if (!name || !description || !image || !price || !category) {
@@ -17,17 +17,12 @@ const addProduct = async (req, res) => {
         const product = new Product({
             name,
             description,
-            image: req.file.path,
+            image,
             price,
             category,
             addedBy
         })
         await product.save();
-
-        res.cookie("productId", product._id.toString(), {
-            httpOnly: true,
-            secure: true
-        })
 
         return res.status(201).json({ message: 'Product added successfully' });
     }
@@ -53,7 +48,7 @@ const getProductById = async (req, res) => {
 
 const getAllProducts = async (req, res) => {
     try {
-        const products = await Product.find().populate('addedBy' , 'userId name email')
+        const products = await Product.find().populate('addedBy' , 'userId name email' )
         return res.json(products);
     } catch (error) {
         console.error(error);
