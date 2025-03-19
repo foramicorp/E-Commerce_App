@@ -5,6 +5,7 @@ const Order = require("../Models/order.model");
 // PLACE ORDER CONTROLLER
 const placeOrder = async (req, res) => {
     try {
+        const {paymentStatus} = req.body;
         const userId = req.user.id;
         console.log(userId)
 
@@ -26,6 +27,7 @@ const placeOrder = async (req, res) => {
             userId,
             items: cart.items,
             totalAmount: cart.totalPrice,
+            paymentStatus ,
             status: "Pending"
         });
 
@@ -45,7 +47,7 @@ const getOrder = async (req, res) => {
     try {
         // FETCHING USERID AND FINDING ORDER
         const userId = req.user.id;
-        const orders = await Order.find({ userId }).populate("items.productId");
+        const orders = await Order.find({ userId }).populate("items.productId")
         return res.json(orders);
 
     } catch (error) {

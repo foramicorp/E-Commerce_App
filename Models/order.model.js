@@ -17,11 +17,15 @@ const orderSchema = new mongoose.Schema({
         }]
     },
     totalAmount: Number,
+    paymentStatus:{
+        type: String,
+        enum: ['Unpaid', 'Paid']      
+    },
     status: {
         type: String,
         enum: ['Pending', 'Delivered']
     }
-}, { timestamps: true });
+});
 
 // ORDER MODEL 
 const Order = mongoose.model('Order', orderSchema);
