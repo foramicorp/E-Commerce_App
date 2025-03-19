@@ -6,19 +6,19 @@ const User = require('../Models/user.model');
 const { generateAccessToken, generateRefreshToken } = require('../Utils/generateToken.util');
 
 // SIGNUP USER CONTROLLER
-const signupUser = async (req , res ) => {
+const signupUser = async (req, res) => {
     try {
 
         // GETTING DATA FROM REQ.BODY
-        const { name , email , password , number , address , role } = req.body;
+        const { name, email, password, number, address, role } = req.body;
 
         // VALIDATING DATA
-        if(!name || !email || !password || !password || !number ||!address || !role ) {
+        if (!name || !email || !password || !password || !number || !address || !role) {
             return res.status(400).json({ message: 'All fields are required :(' });
         };
 
         // CHECKING IF USER ALREADY EXISTS IN THE DATABASE
-        const user = await User.findOne({ name: name, email: email, password: password})
+        const user = await User.findOne({ name: name, email: email, password: password })
         if (user) {
             return res.status(400).json({ message: 'User already exists :(' });
         };
@@ -27,7 +27,7 @@ const signupUser = async (req , res ) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // CREATING NEW USER AND SAVING TO THE DB
-        const newUser = new User({name, email, password : hashedPassword , number, address, role});
+        const newUser = new User({ name, email, password: hashedPassword, number, address, role });
         await newUser.save();
         res.status(201).json({ message: 'User registered successfully :)' });
     }
@@ -35,10 +35,11 @@ const signupUser = async (req , res ) => {
         console.error(error);
         res.status(500).json({ message: 'Error Creating User :(' });
 
-    }}
+    }
+}
 
 // GET ALL USER CONTROLLER
-const getAllUser = async (req , res ) => {
+const getAllUser = async (req, res) => {
     try {
         const users = await User.find();
         res.json(users);
@@ -61,7 +62,7 @@ const getUserById = async (req, res) => {
         }
         res.json(user);
 
-    } catch (error) {   
+    } catch (error) {
         console.error(error);
         res.status(500).send(error.message);
 
@@ -87,7 +88,7 @@ const updateUser = async (req, res) => {
 // DELETE USER CONTROLLER
 const deleteUser = async (req, res) => {
     try {
-        const user = await User.findByIdAndUpdate(req.userId , {isDeleted : true } );
+        const user = await User.findByIdAndUpdate(req.userId, { isDeleted: true });
 
         if (!user) {
             return res.status(404).send("User not found");
@@ -116,12 +117,12 @@ const restoreUser = async (req, res) => {
 };
 
 // LOGIN USER CONTROLLER
-const loginUser = async (req , res ) => {
+const loginUser = async (req, res) => {
     try {
 
         // GETTING DATA FROM REQ.BODY
-        const {email , password } = req.body ;
-        if(!email || !password ) {
+        const { email, password } = req.body;
+        if (!email || !password) {
             return res.status(400).json({ message: 'All fields are required :(' });
         };
 
@@ -147,12 +148,12 @@ const loginUser = async (req , res ) => {
 
         console.log("User After Saving Refresh Token:", await User.findOne({ email }));
 
-        res.cookie('refreshToken', refreshToken, { httpOnly: true, secure:true });
+        res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true });
         res.json({ message: 'User logged in successfully :)', accessToken });
-        
+
     } catch (error) {
         console.log(error);
-        res.status(500).json({ message: 'Error Logging User In :(' , error });
+        res.status(500).json({ message: 'Error Logging User In :(', error });
     }
 }
 
@@ -161,7 +162,7 @@ const refreshToken = async (req, res) => {
     try {
         console.log("Cookies Received:", req.cookies);
 
-        
+
         if (!req.cookies || !req.cookies.refreshToken) {
             return res.status(401).json({ message: "No refresh token found" });
         }
@@ -196,15 +197,15 @@ const refreshToken = async (req, res) => {
 // FORGOT PASSWORD CONTROLLER
 const forgotPassword = async (req, res) => {
     const { email } = req.body;
-    
+
     try {
         const user = await User.findOne({ email });
         if (!user) return res.status(404).json({ message: "User not found" });
 
-        
+
         const otp = generateOtp();
         user.otp = otp;
-        user.otpExpires = Date.now() + 10 * 60 * 1000; 
+        user.otpExpires = Date.now() + 10 * 60 * 1000;
         await user.save();
 
         await sendMail(email, "Password Reset OTP", `Your OTP is ${otp}. It expires in 10 minutes.`);
@@ -244,7 +245,7 @@ const resetPassword = async (req, res) => {
 // LOGOUT USER CONTROLLER
 const logoutUser = async (req, res) => {
     try {
-    
+
         const refreshToken = req.cookies.refreshToken;
         if (!refreshToken) {
             return res.status(400).json({ message: "No refresh token provided" });

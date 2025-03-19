@@ -28,10 +28,10 @@ const cartSchema = new mongoose.Schema({
         type: Number,
         required: true
     }
-});
+}, { timestamps: true });
 
 // CART MODEL
-const Cart = mongoose.model('Cart' , cartSchema);
+const Cart = mongoose.model('Cart', cartSchema);
 
 // EXPORTING THE CART MODEL
 module.exports = Cart;

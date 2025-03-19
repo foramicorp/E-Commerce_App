@@ -10,6 +10,7 @@ app.use(cookieParser());
 const userRouter = require('./Routes/user.route');
 const productRouter = require('./Routes/product.route');
 const cartRouter = require('./Routes/cart.route');
+const orderRouter = require('./Routes/order.route');
 
 // WELCOME ROUTE
 app.get('/', (req, res) => {
@@ -20,6 +21,7 @@ app.get('/', (req, res) => {
 app.use('/api/user', userRouter);
 app.use('/api/product', productRouter);
 app.use('/api/cart' , cartRouter);
+app.use('/api/order' , orderRouter);
 
 
 // STARTING THE SERVER ON PORT 8090 AND CONNECTING TO THE DATABASE

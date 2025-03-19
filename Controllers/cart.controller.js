@@ -31,12 +31,12 @@ const addToCart = async (req, res) => {
         }
 
         // CHECKING IF PRODUCT IS ALREADY IN THE CART
-        const existingItem = cart.items.find((item) => item.product.toString() === productId);
+        const existItem = cart.items.find((item) => item.product.toString() === productId);
 
         // UPDATING THE CART OR ADDING NEW ITEM  IF NOT EXISTING
-        if (existingItem) {
-            existingItem.quantity += quantity;
-            existingItem.price += price;
+        if (existItem) {
+            existItem.quantity += quantity;
+            existItem.price += price;
         } else {
             cart.items.push({ product: productId, quantity, price });
         }
@@ -73,39 +73,13 @@ const getCart = async (req, res) => {
     }
 };
 
-// REMOVE ITEM FROM CART CONTROLLER
-const removeFromCart = async (req, res) => {
-    try {
-        const { productId } = req.body;
-        const userId = req.user.id;
-
-        let cart = await Cart.findOne({ userId });
-        if (!cart)
-
-            return res.status(404).json({ message: "Cart not found" });
-
-
-        cart.items = cart.items.filter(item => item.productId.toString() !== productId);
-
-
-        cart.totalPrice = cart.items.reduce((total, item) => {
-            return total + item.quantity * item.productId.price;
-        }, 0);
-
-        await cart.save();
-        res.status(200).json({ message: "Item removed from cart", cart });
-
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
 
 // CLEAR CART CONTROLLER
 const clearCart = async (req, res) => {
     try {
 
         const cartId = req.params.id;
-        await Cart.findOneAndDelete({ cartId  });
+        await Cart.findOneAndDelete({ cartId });
 
         res.status(200).json({ message: "Cart cleared successfully" });
 
@@ -115,4 +89,4 @@ const clearCart = async (req, res) => {
 };
 
 // EXPORTING CART CONTROLLERS
-module.exports = { addToCart, getCart, removeFromCart, clearCart };
+module.exports = { addToCart, getCart, clearCart };

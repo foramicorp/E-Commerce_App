@@ -7,7 +7,7 @@ const orderSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
-    products: {
+    items: {
         type: [{
             productId: {
                 type: mongoose.Schema.Types.ObjectId,
@@ -19,12 +19,13 @@ const orderSchema = new mongoose.Schema({
     totalAmount: Number,
     status: {
         type: String,
-        enum: ['Pending',  'Delivered']
+        enum: ['Pending', 'Delivered']
     }
-});
- 
+}, { timestamps: true });
+
 // ORDER MODEL 
-const Order =mongoose.model('Order' , orderSchema);
+const Order = mongoose.model('Order', orderSchema);
 
 // EXPORTING ORDER MODEL
+
 module.exports = Order;
