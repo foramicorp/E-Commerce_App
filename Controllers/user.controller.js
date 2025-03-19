@@ -4,6 +4,8 @@ const bcrypt = require('bcrypt');
 const cookies = require('cookie-parser');
 const User = require('../Models/user.model');
 const { generateAccessToken, generateRefreshToken } = require('../Utils/generateToken.util');
+const generateOtp = require('../Utils/generateOtp.util');
+const sendMail = require('../Configs/mailer.config');
 
 // SIGNUP USER CONTROLLER
 const signupUser = async (req, res) => {

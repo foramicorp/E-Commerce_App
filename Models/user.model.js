@@ -33,7 +33,7 @@ const userSchema = new mongoose.Schema({
         default: 'user'
     },
     otp: {
-        String,
+        type: String,
     },
     isDeleted: {
         type: Boolean,
