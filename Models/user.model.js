@@ -1,5 +1,7 @@
+// IMPORTING REQUIREMENTS
 const mongoose = require('mongoose');
 
+// USER SCHEMA
 const userSchema = new mongoose.Schema({
 
     name: {
@@ -43,6 +45,8 @@ const userSchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
+// USER MODEL
 const User = mongoose.model('User', userSchema);
 
+// EXPORTING USER MODEL
 module.exports = User;

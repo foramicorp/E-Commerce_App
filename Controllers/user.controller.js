@@ -1,26 +1,32 @@
+// IMPPORTING REQUIREMENTS
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const cookies = require('cookie-parser');
 const User = require('../Models/user.model');
 const { generateAccessToken, generateRefreshToken } = require('../Utils/generateToken.util');
 
-
+// SIGNUP USER CONTROLLER
 const signupUser = async (req , res ) => {
     try {
 
+        // GETTING DATA FROM REQ.BODY
         const { name , email , password , number , address , role } = req.body;
 
+        // VALIDATING DATA
         if(!name || !email || !password || !password || !number ||!address || !role ) {
             return res.status(400).json({ message: 'All fields are required :(' });
         };
 
+        // CHECKING IF USER ALREADY EXISTS IN THE DATABASE
         const user = await User.findOne({ name: name, email: email, password: password})
         if (user) {
             return res.status(400).json({ message: 'User already exists :(' });
         };
 
+        // HASHING THE PASSWORD
         const hashedPassword = await bcrypt.hash(password, 10);
 
+        // CREATING NEW USER AND SAVING TO THE DB
         const newUser = new User({name, email, password : hashedPassword , number, address, role});
         await newUser.save();
         res.status(201).json({ message: 'User registered successfully :)' });
@@ -31,6 +37,7 @@ const signupUser = async (req , res ) => {
 
     }}
 
+// GET ALL USER CONTROLLER
 const getAllUser = async (req , res ) => {
     try {
         const users = await User.find();
@@ -40,6 +47,8 @@ const getAllUser = async (req , res ) => {
         res.status(500).json({ message: 'Error Getting Users :(' });
     }
 }
+
+// GET USER BY ID CONTROLLER
 const getUserById = async (req, res) => {
     try {
 
@@ -59,6 +68,7 @@ const getUserById = async (req, res) => {
     }
 }
 
+// UPDATE USER CONTROLLER
 const updateUser = async (req, res) => {
     try {
         const user = await User.findByIdAndUpdate(req.user, req.body, { new: true });
@@ -74,7 +84,8 @@ const updateUser = async (req, res) => {
     }
 }
 
-const softDeleteUser = async (req, res) => {
+// DELETE USER CONTROLLER
+const deleteUser = async (req, res) => {
     try {
         const user = await User.findByIdAndUpdate(req.userId , {isDeleted : true } );
 
@@ -89,21 +100,7 @@ const softDeleteUser = async (req, res) => {
 
     }
 }
-
-const hardDeleteUser = async (req, res) => {
-    try {
-        const user = await User.findByIdAndDelete(req.userId);
-
-        if (!user) {
-            return res.status(404).send("User not found");
-        }
-        res.json({ message: "User deleted successfully" });
-
-    } catch (error) {
-        console.error(error);
-        res.status(500).send(error.message);
-    }
-}
+// RESTORE DELETED USER CONTROLLER
 const restoreUser = async (req, res) => {
     try {
         const user = await User.findByIdAndUpdate(req.userId, { isDeleted: false }, { new: true });
@@ -117,27 +114,34 @@ const restoreUser = async (req, res) => {
         res.status(500).send(error.message);
     }
 };
+
+// LOGIN USER CONTROLLER
 const loginUser = async (req , res ) => {
     try {
 
+        // GETTING DATA FROM REQ.BODY
         const {email , password } = req.body ;
         if(!email || !password ) {
             return res.status(400).json({ message: 'All fields are required :(' });
         };
 
+        // CHECKING IF USER EXISTS IN THE DATABASE
         const user = await User.findOne({ email: email });
         if (!user) {
             return res.status(401).json({ message: 'Invalid email or password :(' });
         };
 
+        // CHECKING IF PASSWORD IS CORRECT
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(401).json({ message: 'Invalid email or password :(' });
         };
 
+        // GENERATING ACCESS TOKEN AND REFRESH TOKEN
         const accessToken = generateAccessToken(user);
         const refreshToken = generateRefreshToken(user);
 
+        // UPDATING USER WITH TOKEN AND SAVING TOKEN TO DB 
         user.refreshToken = refreshToken;
         await user.save();
 
@@ -152,6 +156,7 @@ const loginUser = async (req , res ) => {
     }
 }
 
+// REFRESH TOKEN CONTROLLER
 const refreshToken = async (req, res) => {
     try {
         console.log("Cookies Received:", req.cookies);
@@ -188,7 +193,7 @@ const refreshToken = async (req, res) => {
     }
 };
 
-
+// FORGOT PASSWORD CONTROLLER
 const forgotPassword = async (req, res) => {
     const { email } = req.body;
     
@@ -209,6 +214,8 @@ const forgotPassword = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 }
+
+// RESET PASSWORD CONTROLLER
 const resetPassword = async (req, res) => {
     const { email, otp, newPassword } = req.body;
     try {
@@ -234,6 +241,7 @@ const resetPassword = async (req, res) => {
     }
 };
 
+// LOGOUT USER CONTROLLER
 const logoutUser = async (req, res) => {
     try {
     
@@ -263,13 +271,13 @@ const logoutUser = async (req, res) => {
     }
 }
 
+// EXPORTING CONTROLLERS
 module.exports = {
     signupUser,
     getAllUser,
     getUserById,
     updateUser,
-    softDeleteUser,
-    hardDeleteUser,
+    deleteUser,
     restoreUser,
     loginUser,
     refreshToken,

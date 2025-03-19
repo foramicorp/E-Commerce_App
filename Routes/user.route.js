@@ -1,3 +1,4 @@
+// IMPORTING REQUIREMENTS
 const Router = require('express');
 const { getAllUser,
     getUserById,
@@ -8,14 +9,14 @@ const { getAllUser,
     resetPassword,
     logoutUser,
     updateUser,
-    softDeleteUser,
     restoreUser,
-    hardDeleteUser } = require('../Controllers/user.controller');
-
+    deleteUser } = require('../Controllers/user.controller');
 const isToken = require('../Middlewares/auth.middleware');
 
+// INITIALIZATION
 const userRouter = Router();
 
+// USER ROUTING
 userRouter.get('/get-alluser', getAllUser);
 userRouter.get('/get-userbyid', isToken, getUserById);
 userRouter.post('/signup-user', signupUser);
@@ -23,10 +24,10 @@ userRouter.post('/login-user', loginUser);
 userRouter.post('/refresh-token', refreshToken);
 userRouter.post('/forgot-password', forgotPassword);
 userRouter.post('/reset-password', resetPassword);
-userRouter.post('/logout-user',  logoutUser);
-userRouter.put('/update-user', isToken ,updateUser);
-userRouter.put('delete-user', isToken ,softDeleteUser);
+userRouter.post('/logout-user', isToken, logoutUser);
+userRouter.put('/update-user', isToken, updateUser);
+userRouter.put('/delete-user', isToken, deleteUser);
 userRouter.put('/restore-user', restoreUser);
-userRouter.delete('/hard-delete-user', hardDeleteUser);
 
+// EXPORTING USER ROUTER
 module.exports = userRouter;

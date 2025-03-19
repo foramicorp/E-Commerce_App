@@ -1,5 +1,7 @@
+// IMPORTING REQUIREMENTS
 const mongoose = require('mongoose');
 
+// CART SCHEMA
 const cartSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
@@ -28,6 +30,8 @@ const cartSchema = new mongoose.Schema({
     }
 });
 
+// CART MODEL
 const Cart = mongoose.model('Cart' , cartSchema);
 
+// EXPORTING THE CART MODEL
 module.exports = Cart;

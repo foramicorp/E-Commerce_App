@@ -1,19 +1,18 @@
-const fs = require('fs');
-const path = require('path');
-const multer = require('multer');
+// IMPORTING REQUIREMENTS
 const Product = require('../Models/product.model');
-const upload = require('../Utils/imageUpload.util');
 
+// ADD PRODUCT CONTROLLER (ONLY ALLOW TO ADMIN)
 const addProduct = async (req, res) => {
     try {
-        const { name, description,  price, category , image } = req.body;
-        // const image = req.file? req.file.path : null;
-        const addedBy = req.user._id
+        // GETTING PRODUCT DATA FROM REQ.BODY
+        const { name, description, price, category, image } = req.body;
+        const addedBy = req.user._id;
 
+        // VALIDATING INPUT
         if (!name || !description || !image || !price || !category) {
             return res.status(400).json({ message: 'All fields are required' });
         }
-
+        // CREATING AND SAVING NEW PRODUCT TO DB
         const product = new Product({
             name,
             description,
@@ -23,7 +22,6 @@ const addProduct = async (req, res) => {
             addedBy
         })
         await product.save();
-
         return res.status(201).json({ message: 'Product added successfully' });
     }
     catch (error) {
@@ -32,9 +30,11 @@ const addProduct = async (req, res) => {
     }
 }
 
+// GET PRODUCT BY ID (ONLY ALLOW TO ADMIN)
 const getProductById = async (req, res) => {
     try {
-        const productId = req.params.productId;
+        // FINDING PRODUCT BY ID
+        const productId = req.params.id;
         const product = await Product.findById(productId);
         if (!product) {
             return res.status(404).json({ message: 'Product not found' });
@@ -45,10 +45,10 @@ const getProductById = async (req, res) => {
         return res.status(500).json({ message: 'Server error' });
     }
 }
-
+// GET ALL PRODUCT
 const getAllProducts = async (req, res) => {
     try {
-        const products = await Product.find().populate('addedBy' , 'userId name email' )
+        const products = await Product.find().populate('addedBy', 'userId name email')
         return res.json(products);
     } catch (error) {
         console.error(error);
@@ -56,15 +56,17 @@ const getAllProducts = async (req, res) => {
     }
 }
 
+// UPDATE PRODUCT CONTROLLER 
 const updateProduct = async (req, res) => {
     try {
-        const productId = req.params.productId;
-        const updatedProduct = req.body;
-        const product = await Product.findByIdAndUpdate(productId, updatedProduct, { new: true });
+        // FIND PRODUCT AND UPDATE
+        const productId = req.params.id;
+        const product = await Product.findByIdAndUpdate(productId, { new: true });
         if (!product) {
             return res.status(404).json({ message: 'Product not found' });
         }
-        return res.json(product);
+        return res.status(200).json({ message: 'Product updated successfully', product });
+
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: 'Server error' });
@@ -72,9 +74,11 @@ const updateProduct = async (req, res) => {
     }
 }
 
-const deleteProduct = async (req , res) => {
+// DELETE PRODUCT CONTROLLER
+const deleteProduct = async (req, res) => {
     try {
-        const productId = req.params.productId;
+        // FIND PRODUCT AND DELETE IT
+        const productId = req.params.id;
         const product = await Product.findByIdAndDelete(productId);
         if (!product) {
             return res.status(404).json({ message: 'Product not found' });
@@ -86,6 +90,7 @@ const deleteProduct = async (req , res) => {
     }
 }
 
+// EXPORTING CONTROLLERS
 module.exports = {
     addProduct,
     getProductById,

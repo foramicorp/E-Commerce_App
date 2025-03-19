@@ -1,26 +1,29 @@
+// IMPORTING REQUIREMENTS
 const express = require('express');
 const dbConnect = require('./Configs/db.config');
 const cookieParser = require('cookie-parser');
+
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
-const fs = require("fs");
-const multer = require("multer");
-const path = require("path");
+
 const userRouter = require('./Routes/user.route');
 const productRouter = require('./Routes/product.route');
-app.use(express.urlencoded({ extended: true }));
-app.use("/Uploads", express.static(path.join(__dirname, "Uploads")))
+const cartRouter = require('./Routes/cart.route');
 
+// WELCOME ROUTE
 app.get('/', (req, res) => {
     res.send("welcome to the api");
 })
 
-app.use('/api/user' , userRouter);
-app.use('/api/product' , productRouter);
+// USING ROUTERS
+app.use('/api/user', userRouter);
+app.use('/api/product', productRouter);
+app.use('/api/cart' , cartRouter);
 
 
-app.listen(8090 , () => {
+// STARTING THE SERVER ON PORT 8090 AND CONNECTING TO THE DATABASE
+app.listen(8090, () => {
     console.log('Server started on port 8090');
     dbConnect()
-})
+});
