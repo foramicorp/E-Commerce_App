@@ -7,19 +7,28 @@ const orderSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
-    items: {
-        type: [{
-            productId: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'Product'
-            },
-            quantity: Number
-        }]
-    },
+      items: [{
+          product: {
+              type: mongoose.Schema.Types.ObjectId,
+              ref: 'Product',
+              required: true
+          },
+          name : {
+              type: String
+          },
+          quantity: {
+              type: Number,
+              required: true
+          },
+          price: {
+              type: Number,
+              required: true
+          }
+      }],
     totalAmount: Number,
-    paymentStatus:{
+    paymentStatus: {
         type: String,
-        enum: ['Unpaid', 'Paid']      
+        enum: ['Unpaid', 'Paid']
     },
     status: {
         type: String,

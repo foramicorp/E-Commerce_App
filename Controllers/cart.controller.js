@@ -6,7 +6,7 @@ const addToCart = async (req, res) => {
     try {
 
         // RECIEVE PRODUCTID AND QUANTITY FROM REQ.BODY
-        const { productId, quantity } = req.body;
+        const { productId,  quantity } = req.body;
         const userId = req.user.id;
 
         // VALIDATE INPUT

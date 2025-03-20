@@ -61,7 +61,7 @@ const updateProduct = async (req, res) => {
     try {
         // FIND PRODUCT AND UPDATE
         const productId = req.params.id;
-        const product = await Product.findByIdAndUpdate(productId, {new : true});
+        const product = await Product.findByIdAndUpdate(productId, req.body ,{new : true});
         console.log(product);
         if (!product) {
             return res.status(404).json({ message: 'Product not found' });
@@ -75,7 +75,7 @@ const updateProduct = async (req, res) => {
     }
 }
 
-// DELETE PRODUCT CONTROLLER
+// DELETE PRODUCT CONTROLLER    
 const deleteProduct = async (req, res) => {
     try {
         // FIND PRODUCT AND DELETE IT

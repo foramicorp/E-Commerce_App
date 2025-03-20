@@ -2,6 +2,7 @@
 const Cart = require("../Models/cart.model");
 const Order = require("../Models/order.model");
 
+
 // PLACE ORDER CONTROLLER
 const placeOrder = async (req, res) => {
     try {
@@ -25,7 +26,7 @@ const placeOrder = async (req, res) => {
         // PLACING ORDER AND SAVING TO THE DATABASE
         const order = new Order({
             userId,
-            items: cart.items,
+            items : cart.items.product,
             totalAmount: cart.totalPrice,
             paymentStatus ,
             status: "Pending"
@@ -47,10 +48,10 @@ const getOrder = async (req, res) => {
     try {
         // FETCHING USERID AND FINDING ORDER
         const userId = req.user.id;
-        const orders = await Order.find({ userId }).populate("items.productId")
+        const orders = await Order.find({ userId }).populate("items.product" )
         return res.json(orders);
 
-    } catch (error) {
+    } catch (error) {   
 
         console.error("Error getting order", error);
         return res.status(500).json({ message: "Internal server error" });

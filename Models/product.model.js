@@ -28,7 +28,7 @@ const productSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
     }
-}, { timestamps: true });
+});
 
 // PRODUCT MODEL 
 const Product = mongoose.model('Product', productSchema);
