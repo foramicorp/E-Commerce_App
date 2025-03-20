@@ -1,6 +1,7 @@
+// IMPORTING REQUIREMENTS
 const Category = require("../Models/category.model");
 
-
+// GET CATEGORY CONTROLLER
 const getCategories = async (req, res) => {
     try {
         const categories = await Category.find();
@@ -10,7 +11,7 @@ const getCategories = async (req, res) => {
     }
 };
 
-
+// ADD CATEGORY CONTROLLER
 const addCategories = async (req, res) => {
     try {
         const categories = ["electronics", "elothing", "books", "home", "other"];
@@ -27,4 +28,5 @@ const addCategories = async (req, res) => {
     }
 };
 
+// EXPORTING CATEGORY CONTROLLERS
 module.exports = { getCategories, addCategories };
