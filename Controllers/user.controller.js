@@ -56,13 +56,75 @@ const getUserById = async (req, res) => {
     try {
 
         // GETTING USER BY ID FROM THE DATABASE
-        const user = await User.findById(req.user);
-        console.log(user);
+        const user = await User.findById(req.user).select('-password -otp -__v -updatedAt -isDeleted')
+
+        // const users = await User.find({isDeleted:false}).select("-otp")
+
+        // for(const user of users) {
+        //      await User.updateOne(
+        //         {
+        //             _id:user._id
+        //         },
+        //         {
+        //             $set:{
+        //                 "isDeleted":false
+        //             }
+        //         }
+        //     )
+            
+
+        // }
+
+        // const userIds = users.map((i)=>i._id)
+
+        // console.log("userIds", userIds);
+        
+
+
+
+
+
+        // await User.updateMany(
+        //     {
+        //         _id:{$in:userIds}
+        //     },
+        //     {
+        //         $set:{
+        //             "isDeleted":false
+        //         }
+        //     }
+        // )
+
+
+
+
+
+
+
+
+
+        // const user = await User.updateOne(
+        //     {
+        //         _id:req.user
+        //     },
+        //     {
+        //         $set:{
+        //             "isDeleted":true
+        //         }
+        //     }
+        // )
+
+        // const user = await User.deleteOne({_id:req.user})
+
+
 
         if (!user) {
             return res.status(404).send("User not found");
         }
-        res.json(user);
+        res.status(200).json({
+            success:true,
+            data:user
+        })
 
     } catch (error) {
         console.error(error);
