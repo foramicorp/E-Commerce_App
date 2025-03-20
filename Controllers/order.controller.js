@@ -26,7 +26,7 @@ const placeOrder = async (req, res) => {
         // PLACING ORDER AND SAVING TO THE DATABASE
         const order = new Order({
             userId,
-            items : cart.items.product,
+            items: cart.items,
             totalAmount: cart.totalPrice,
             paymentStatus ,
             status: "Pending"
@@ -48,8 +48,8 @@ const getOrder = async (req, res) => {
     try {
         // FETCHING USERID AND FINDING ORDER
         const userId = req.user.id;
-        const orders = await Order.find({ userId }).populate("items.product" )
-        return res.json(orders);
+        const orders = await Order.find({ userId }).populate("items.product");
+        return res.json({orders});
 
     } catch (error) {   
 

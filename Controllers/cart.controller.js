@@ -79,8 +79,7 @@ const clearCart = async (req, res) => {
     try {
 
         const cartId = req.params.id;
-        await Cart.findOneAndDelete({ cartId });
-
+        const cart = await Cart.findOneAndUpdate({ cartId  , isDeleted: true});
         res.status(200).json({ message: "Cart cleared successfully" });
 
     } catch (error) {

@@ -20,9 +20,8 @@ const productSchema = new mongoose.Schema({
         required: true,
     },
     category: {
-        type: String,
-        required: true,
-        enum: ['Electronics', 'Clothing', 'Books', 'Other']
+       type: mongoose.Schema.Types.ObjectId,
+       ref: 'Category'
     },
     addedBy: {
         type: mongoose.Schema.Types.ObjectId,

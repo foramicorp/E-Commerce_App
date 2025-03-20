@@ -7,7 +7,7 @@ const cartRouter = Router();
 // CART ROUTINGS
 cartRouter.post("/addto-cart", isToken, addToCart);
 cartRouter.get("/get-cart", isToken, getCart);
-cartRouter.delete("/clear-cart", isToken, clearCart);
+cartRouter.put("/clear-cart", isToken, clearCart);
 
 // EXPORTING CART ROUTER
 module.exports = cartRouter;
