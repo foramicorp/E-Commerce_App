@@ -14,7 +14,7 @@ const getCategories = async (req, res) => {
 // ADD CATEGORY CONTROLLER
 const addCategories = async (req, res) => {
     try {
-        const categories = ["electronics", "elothing", "books", "home", "other"];
+        const categories = ["electronics", "clothing", "books", "home", "other"];
 
         for (const name of categories) {
             const existingCategory = await Category.findOne({ name });

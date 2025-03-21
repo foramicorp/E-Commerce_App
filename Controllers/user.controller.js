@@ -210,8 +210,6 @@ const loginUser = async (req, res) => {
         // UPDATING USER WITH TOKEN AND SAVING TOKEN TO DB 
         user.refreshToken = refreshToken;
 
-        console.log("User After Saving Refresh Token:", await User.findOne({ email }));
-
         res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true });
         res.json({ message: 'User logged in successfully :)', accessToken });
 
