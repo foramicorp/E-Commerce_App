@@ -43,9 +43,8 @@ const signupUser = async (req, res) => {
 // GET ALL USER CONTROLLER
 const getAllUser = async (req, res) => {
     try {
-        const users = await User.find().select('-password -otp -__v -updatedAt -isDeleted')
-        ;
-        res.json(users);
+        const users = await User.find().select('-password -otp -__v -updatedAt -isDeleted').sort({  _id: -1 }).lean()
+        res.json({TotalUsers : users.length , users});
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: 'Error Getting Users :(' });

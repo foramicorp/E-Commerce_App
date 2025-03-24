@@ -46,7 +46,7 @@ const getOrder = async (req, res) => {
     try {
         // FETCHING USERID AND FINDING ORDER
         const userId = req.user.id;
-        const orders = await Order.find({ userId }).populate("items.product" , "category name");
+        const orders = await Order.find({ userId }).populate("items.product" , "category name").sort({ _id : -1});
         return res.json({orders});
 
     } catch (error) {   
