@@ -32,14 +32,11 @@ const userSchema = new mongoose.Schema({
         enum: ['admin', 'user'],
         default: 'user'
     },
-    otp: {
-        type: String,
-    },
     isDeleted: {
         type: Boolean,
         default: false
     },
-}, { timestamps: true });
+});
 
 // USER MODEL
 const User = mongoose.model('User', userSchema);

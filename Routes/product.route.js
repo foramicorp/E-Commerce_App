@@ -12,7 +12,7 @@ productRouter.post('/add-product', isToken, isAdmin, addProduct);
 
 productRouter.get('/get-allproduct', getAllProducts);
 productRouter.get('/get-productbyid/:id', isToken, isAdmin, getProductById);
-productRouter.get('/get-productby-category/:id', isToken, getProductsByCategory);
+productRouter.get('/get-productby-category/:id', isToken,  isAdmin,getProductsByCategory);
 productRouter.get('/get-product-categoryby-name/:name' , isToken , getProductByCategoryName);
 
 productRouter.put('/update-product/:id', isToken, isAdmin, updateProduct);

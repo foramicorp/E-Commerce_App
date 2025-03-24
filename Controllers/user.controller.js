@@ -43,7 +43,8 @@ const signupUser = async (req, res) => {
 // GET ALL USER CONTROLLER
 const getAllUser = async (req, res) => {
     try {
-        const users = await User.find();
+        const users = await User.find().select('-password -otp -__v -updatedAt -isDeleted')
+        ;
         res.json(users);
     } catch (error) {
         console.log(error);

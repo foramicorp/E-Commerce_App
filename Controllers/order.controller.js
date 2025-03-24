@@ -8,12 +8,10 @@ const placeOrder = async (req, res) => {
     try {
         const {paymentStatus} = req.body;
         const userId = req.user.id;
-        console.log(userId)
 
         // FETCHING CART DATA FROM DATABASE
         const cart = await Cart.findOne({ user: userId }).populate("items.product");
-        console.log("Cart Data:", cart);
-
+    
         // VERIFYING CART DATA
         if (!cart) {
             return res.status(400).json({ message: "No cart found for this user" });
@@ -48,7 +46,7 @@ const getOrder = async (req, res) => {
     try {
         // FETCHING USERID AND FINDING ORDER
         const userId = req.user.id;
-        const orders = await Order.find({ userId }).populate("items.product");
+        const orders = await Order.find({ userId }).populate("items.product" , "category name");
         return res.json({orders});
 
     } catch (error) {   

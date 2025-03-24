@@ -1,7 +1,6 @@
 // IMPORTING REQUIREMENTS
 const Category = require("../Models/category.model");
 
-// GET CATEGORY CONTROLLER
 const getCategories = async (req, res) => {
     try {
         const categories = await Category.find();
