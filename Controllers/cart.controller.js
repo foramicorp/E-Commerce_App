@@ -1,12 +1,10 @@
 const Cart = require("../Models/cart.model");
 const Product = require("../Models/product.model");
 
-// ADD TO CART CONTROLLER
 const addToCart = async (req, res) => {
     try {
-
-        // RECIEVE PRODUCTID AND QUANTITY FROM REQ.BODY
-        const { productId,  quantity } = req.body;
+        // RECEIVE PRODUCTID AND QUANTITY FROM REQ.BODY
+        const { productId, quantity } = req.body;
         const userId = req.user.id;
 
         // VALIDATE INPUT
@@ -20,30 +18,26 @@ const addToCart = async (req, res) => {
             return res.status(404).json({ message: "Product not found" });
         }
 
-        // CALCULATING THE PRICE OF PRODUCT 
-        const price = product.price * quantity;
-
-        // FINDING THE USER'S CART  OR CREATING A NEW ONE IF NOT FOUND
+        // FIND OR CREATE A USER'S CART
         let cart = await Cart.findOne({ user: userId });
-
         if (!cart) {
             cart = new Cart({ user: userId, items: [], totalPrice: 0 });
         }
 
-        // CHECKING IF PRODUCT IS ALREADY IN THE CART
+        // CHECK IF PRODUCT ALREADY EXISTS IN THE CART
         const existItem = cart.items.find((item) => item.product.toString() === productId);
 
-        // UPDATING THE CART OR ADDING NEW ITEM  IF NOT EXISTING
         if (existItem) {
             existItem.quantity += quantity;
-            existItem.price += price;
+            // No need to update price since price is per unit
         } else {
-            cart.items.push({ product: productId, quantity, price });
+            cart.items.push({ product: productId, quantity, price: product.price });
         }
 
-        // UPDATING THE CART IN THE DATABASE  AND RETURNING THE UPDATED CART
-        cart.totalPrice = cart.items.reduce((sum, item) => sum + item.price, 0);
+        // CALCULATE TOTAL CART PRICE
+        cart.totalPrice = cart.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
+        // SAVE THE UPDATED CART
         await cart.save();
 
         res.status(200).json({ message: "Item added to cart", cart });
@@ -61,7 +55,7 @@ const getCart = async (req, res) => {
         const userId = req.user.id;
 
         // POPULATING THE PRODUCTS IN THE CART  AND RETURNING THE UPDATED CART  IF NOT FOUND
-        const cart = await Cart.findOne({ user: userId }).populate("items.product" , 'category name ');
+        const cart = await Cart.findOne({ user: userId }).populate("items.product", 'categoryName name ');
 
         if (!cart) {
             return res.status(404).json({ message: "Cart is empty" });
@@ -78,8 +72,9 @@ const getCart = async (req, res) => {
 const clearCart = async (req, res) => {
     try {
 
-        const cartId = req.params.id;
-        const cart = await Cart.findOneAndUpdate({ cartId  , isDeleted: true});
+        const userId = req.params.id;
+        await Cart.findOneAndDelete({ userId: userId })
+
         res.status(200).json({ message: "Cart cleared successfully" });
 
     } catch (error) {

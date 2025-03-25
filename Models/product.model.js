@@ -20,15 +20,12 @@ const productSchema = new mongoose.Schema({
         required: true,
     },
     category: {
-        categoryId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Category',
-            required: true
-        },
-        categoryName: {
-            type: String,
-            required: true
-        }
+       type: mongoose.Schema.Types.ObjectId,
+       ref: 'Category'
+    },
+    categoryName : {
+        type: String,
+        required: true
     },
     addedBy: {
         type: mongoose.Schema.Types.ObjectId,

@@ -6,8 +6,8 @@ const isAdmin = require("../Middlewares/role.middleware");
 const categoryRouter = Router();
 
 // CATEGORY ROUTING
-categoryRouter.get("/get-category" , isToken, isAdmin,getCategories);
-categoryRouter.post("/add-category" , isToken , isAdmin ,addCategories);
+categoryRouter.get("/get-category", isToken, isAdmin, getCategories);
+categoryRouter.post("/add-category", isToken, isAdmin, addCategories);
 
 // EXPORTING CATEGORY ROUTER
 module.exports = categoryRouter;

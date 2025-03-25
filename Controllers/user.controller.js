@@ -43,8 +43,8 @@ const signupUser = async (req, res) => {
 // GET ALL USER CONTROLLER
 const getAllUser = async (req, res) => {
     try {
-        const users = await User.find().select('-password -otp -__v -updatedAt -isDeleted').sort({  _id: -1 }).lean()
-        res.json({TotalUsers : users.length , users});
+        const users = await User.find().select('-password -otp -__v -updatedAt -isDeleted').sort({ _id: -1 }).lean()
+        res.json({ TotalUsers: users.length, users });
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: 'Error Getting Users :(' });
@@ -58,72 +58,12 @@ const getUserById = async (req, res) => {
         // GETTING USER BY ID FROM THE DATABASE
         const user = await User.findById(req.user).select('-password -otp -__v -updatedAt -isDeleted')
 
-        // const users = await User.find({isDeleted:false}).select("-otp")
-
-        // for(const user of users) {
-        //      await User.updateOne(
-        //         {
-        //             _id:user._id
-        //         },
-        //         {
-        //             $set:{
-        //                 "isDeleted":false
-        //             }
-        //         }
-        //     )
-            
-
-        // }
-
-        // const userIds = users.map((i)=>i._id)
-
-        // console.log("userIds", userIds);
-        
-
-
-
-
-
-        // await User.updateMany(
-        //     {
-        //         _id:{$in:userIds}
-        //     },
-        //     {
-        //         $set:{
-        //             "isDeleted":false
-        //         }
-        //     }
-        // )
-
-
-
-
-
-
-
-
-
-        // const user = await User.updateOne(
-        //     {
-        //         _id:req.user
-        //     },
-        //     {
-        //         $set:{
-        //             "isDeleted":true
-        //         }
-        //     }
-        // )
-
-        // const user = await User.deleteOne({_id:req.user})
-
-
-
         if (!user) {
             return res.status(404).send("User not found");
         }
         res.status(200).json({
-            success:true,
-            data:user
+            success: true,
+            data: user
         })
 
     } catch (error) {

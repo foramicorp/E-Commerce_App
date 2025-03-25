@@ -23,7 +23,7 @@ const placeOrder = async (req, res) => {
 
         // PLACING ORDER AND SAVING TO THE DATABASE
         const order = new Order({
-            userId,
+            user : userId,
             items: cart.items,
             totalAmount: cart.totalPrice,
             paymentStatus ,
@@ -31,7 +31,7 @@ const placeOrder = async (req, res) => {
         });
 
         await order.save();
-        await Cart.deleteOne({ userId });
+        await Cart.findOneAndDelete({ user: userId });
 
         return res.status(201).json({ message: "Order placed successfully" });
 
