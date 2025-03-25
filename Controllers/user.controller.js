@@ -178,8 +178,7 @@ const refreshToken = async (req, res) => {
         if (!user) {
             return res.status(403).json({ message: "Invalid refresh token (User not found)" });
         }
-
-
+        
         jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET_KEY, (err, decoded) => {
             if (err) {
                 console.error("JWT Verification Error:", err);

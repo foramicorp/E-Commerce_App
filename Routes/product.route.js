@@ -1,7 +1,7 @@
 // IMPORTING REQUIREMENTS
 const Router = require('express');
 const isAdmin = require('../Middlewares/role.middleware');
-const { addProduct, getAllProducts, getProductById, updateProduct, deleteProduct, getProductsByCategory, getProductByCategoryName } = require('../Controllers/product.controller');
+const { addProduct, getAllProducts, getProductById, updateProduct, deleteProduct, getProductsByCategory, getProductByCategoryName} = require('../Controllers/product.controller');
 const isToken = require('../Middlewares/auth.middleware');
 
 // INITIALIZING ROUTER
@@ -17,6 +17,7 @@ productRouter.get('/get-product-categoryby-name/:name', isToken, getProductByCat
 
 productRouter.put('/update-product/:id', isToken, isAdmin, updateProduct);
 productRouter.put('/delete-product/:id', isToken, isAdmin, deleteProduct);
+
 
 // EXPORTING THE ROUTER
 module.exports = productRouter

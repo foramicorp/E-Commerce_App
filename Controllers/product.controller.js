@@ -28,7 +28,7 @@ const addProduct = async (req, res) => {
             description,
             image,
             price,
-            category: new mongoose.Types.ObjectId(categoryId),
+            category: new mongoose.Types.ObjectId(categoryId  ),
             categoryName,
             addedBy
         });
@@ -47,7 +47,7 @@ const getProductById = async (req, res) => {
 
         // FINDING PRODUCT BY ID
         const productId = req.params.id;
-        const product = await Product.findById(productId).populate('addedBy', 'userId name email');
+        const product = await Product.findById(productId).populate('category addedBy' , "name userId name email").select('-categoryName')
 
         if (!product) {
             return res.status(404).json({ message: 'Product not found' });
@@ -62,14 +62,12 @@ const getProductById = async (req, res) => {
 // GET ALL PRODUCT
 const getAllProducts = async (req, res) => {
     try {
-
-        let query = Product.find().select('-category -addedBy').sort({ _id: -1 });
-        const products = await query;
-        return res.status(200).json({ TotalProduct: products.length, products });
+        const products = await Product.find().populate("category addedBy" , "name email").select('-categoryName').sort({ _id: -1 }).lean()
+        return res.status(200).json({ success : true , TotalProduct: products.length, products });
 
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ message: 'Server error' });
+        return res.status(500).json({success : false});
     }
 };
 
@@ -87,7 +85,7 @@ const getProductsByCategory = async (req, res) => {
             return res.status(404).json({ error: "Category not found" });
         }
 
-        const products = await Product.find({ category: categoryId }).populate('addedBy', 'userId name email').sort({ _id: -1 });
+        const products = await Product.find({ category: categoryId }).populate('category addedBy', 'name userId name email').select('-categoryName').sort({ _id: -1 });
         res.status(200).json({ TotalProduct: products.length, products });
 
     } catch (error) {
@@ -107,14 +105,13 @@ const getProductByCategoryName = async (req, res) => {
             return res.status(404).json({ error: "Category not found" });
         }
 
-        const products = await Product.find({ category: category._id }).select('-category -addedBy').sort({ _id: -1 });
+        const products = await Product.find({ category: category._id }).populate('category addedBy' , "name userId name email").select('-categoryName -__v -isDeleted').sort({ _id: -1 });
         res.status(200).json({ TotalProduct: products.length, products });
 
     } catch (error) {
         res.status(500).json({ error: "Internal Server Error" });
     }
-};
-
+};  
 
 // UPDATE PRODUCT CONTROLLER 
 const updateProduct = async (req, res) => {
@@ -123,7 +120,6 @@ const updateProduct = async (req, res) => {
         // FIND PRODUCT AND UPDATE
         const productId = req.params.id;
         const product = await Product.findByIdAndUpdate(productId, req.body, { new: true });
-        console.log(product);
 
         if (!product) {
             return res.status(404).json({ message: 'Product not found' });
@@ -142,18 +138,19 @@ const deleteProduct = async (req, res) => {
 
         // FIND PRODUCT AND DELETE IT
         const productId = req.params.id;
-        const product = await Product.findByIdAndUpdate(productId, { isDeleted: true });
+        const product = await Product.findByIdAndUpdate({productId}, { isDeleted: true } , {new : true});
 
         if (!product) {
             return res.status(404).json({ message: 'Product not found' });
         }
         return res.json({ message: 'Product deleted successfully' });
-        
+
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: 'Server error' });
     }
 }
+
 
 // EXPORTING CONTROLLERS
 module.exports = {
@@ -163,5 +160,5 @@ module.exports = {
     updateProduct,
     deleteProduct,
     getProductsByCategory,
-    getProductByCategoryName,
+    getProductByCategoryName
 };

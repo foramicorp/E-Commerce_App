@@ -4,7 +4,7 @@ const Product = require("../Models/product.model");
 const addToCart = async (req, res) => {
     try {
         // RECEIVE PRODUCTID AND QUANTITY FROM REQ.BODY
-        const { productId, quantity } = req.body;
+        const { productId, name, quantity } = req.body;
         const userId = req.user.id;
 
         // VALIDATE INPUT
@@ -29,9 +29,9 @@ const addToCart = async (req, res) => {
 
         if (existItem) {
             existItem.quantity += quantity;
-            // No need to update price since price is per unit
+
         } else {
-            cart.items.push({ product: productId, quantity, price: product.price });
+            cart.items.push({ product: productId, name: product.name, quantity, price: product.price });
         }
 
         // CALCULATE TOTAL CART PRICE

@@ -30,7 +30,11 @@ const productSchema = new mongoose.Schema({
     addedBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-    }
+    },
+    isDeleted: {
+        type: Boolean,
+        default: false
+    },
 });
 
 // PRODUCT MODEL 
